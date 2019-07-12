@@ -1,18 +1,53 @@
 import React from 'react';
-import { Text, View, StyleSheet, TextInput, Dimensions, Image } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  Dimensions,
+  Image,
+} from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 
-const SearchBar = ({}) => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.searchBox}>
-      <Image  style={styles.searchIcon} source={require('../Images/searchIcon.png')} />
-        <TextInput placeholder="Enter username">
-        </TextInput>
+class SearchBar extends React.Component {
+  getUserRepos = username => {
+    console.log(username);
+
+    try {
+      fetch('https://api.github.com/users/'+username+'/repos', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then (response=>  response.json())
+      .then (responseJson=>{
+        console.log(responseJson)
+      })
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.searchBox}>
+          <Image
+            style={styles.searchIcon}
+            source={require('../Images/searchIcon.png')}
+          />
+          <TextInput
+            style={styles.textBox}
+            placeholder="Enter username"
+            onSubmitEditing={event => this.getUserRepos(event.nativeEvent.text)}
+          />
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -32,6 +67,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     marginTop: 25,
+  },
+  textBox: {
+    width: Dimensions.get('window').width - 100,
   },
   searchIcon: {
     height: 23,
