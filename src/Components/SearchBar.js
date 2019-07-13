@@ -10,26 +10,59 @@ import {
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 
 class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      languageCollection: [],
+      languageURlCollection: [],
+      response:null,
+    };
+  }
+
   getUserRepos = username => {
     console.log(username);
 
     try {
-      fetch('https://api.github.com/users/'+username+'/repos', {
+      fetch('https://api.github.com/users/' + username + '/repos', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
-      .then (response=>  response.json())
-      .then (responseJson=>{
-        console.log(responseJson)
-      })
-      
+        .then(response => response.json())
+        .then(responseJson => {
+          console.log(responseJson);
+          this.setState({
+            response:responseJson
+          },()=>{
+            this.getLanguagePool();
+          });
+         
+        });
     } catch (error) {
       console.log(error);
     }
   };
+
+  getLanguagePool = () => {
+    var langauageArray = [];
+    var languageURLArray = [];
+    for (i = 0; i < this.state.response.length; i++) {
+      langauageArray.push(this.state.response[i].language);
+      languageURLArray.push(this.state.response[i].languages_url);
+    }
+
+    this.setState({
+      languageCollection: langauageArray,
+      languageURlCollection: languageURLArray,
+    },()=>{
+      console.log("languageCollection",this.state.languageCollection);
+      console.log("languageURlCollection",this.state.languageURlCollection);
+    });
+
+  };
+
   render() {
     return (
       <View style={styles.container}>
