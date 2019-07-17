@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 var deepLanguageCollection = {};
+var total=null;
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
@@ -105,6 +106,7 @@ class SearchBar extends React.Component {
       value = this.state.repoLanguageResponse[
         Object.keys(this.state.repoLanguageResponse)[i]
       ];
+      total+=value;
       keyString=key.toString();
 
 
@@ -118,6 +120,7 @@ class SearchBar extends React.Component {
         deepLanguageCollection[keyString]=value;
       }
       console.log("deepLanguageCollection",deepLanguageCollection)
+      console.log("total",total)
 
     }
   };
