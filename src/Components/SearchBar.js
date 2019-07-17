@@ -8,14 +8,13 @@ import {
   Image,
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
-
+var deepLanguageCollection = {};
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       languageCollection: [],
       languageURlCollection: [],
-      deepLanguageCollection: [],
       response: null,
       repoLanguageResponse: null,
     };
@@ -69,8 +68,8 @@ class SearchBar extends React.Component {
 
   getDeepLanguagePool = () => {
     // console.log('getDeepLanguagePool');
-    // for (i = 0; i < this.state.languageURlCollection.length; i++) {
-    for (i = 0; i <= 1; i++) {
+    for (i = 0; i < this.state.languageURlCollection.length; i++) {
+    // for (i = 0; i <= 1; i++) {
       try {
         fetch(this.state.languageURlCollection[i], {
           method: 'GET',
@@ -96,67 +95,31 @@ class SearchBar extends React.Component {
     }
   };
 
-  poolLanguagesFromRepos = () => {
-    var dictionary = [];
-    var key, value;
-    // console.log(this.state.repoLanguageResponse)
-    for (i = 0; i < Object.keys(this.state.repoLanguageResponse).length; i++) {
-      // console.log("Hello",Object.keys(this.state.repoLanguageResponse)[i]);
-      // dictionary.push({
-      //   key: Object.keys(this.state.repoLanguageResponse)[i],
-      //   value: this.state.repoLanguageResponse[Object.keys(this.state.repoLanguageResponse)[i]],
-      // });
 
+  poolLanguagesFromRepos = () => {
+    var key, value, keyString;
+    console.log('RESPONSE', this.state.repoLanguageResponse);
+    for (i = 0; i < Object.keys(this.state.repoLanguageResponse).length; i++) {
+      // console.log("Object.keys(this.state.repoLanguageResponse)[i]",Object.keys(this.state.repoLanguageResponse)[i]);
       key = Object.keys(this.state.repoLanguageResponse)[i];
       value = this.state.repoLanguageResponse[
         Object.keys(this.state.repoLanguageResponse)[i]
       ];
-      // console.log('key', key);
+      keyString=key.toString();
 
-      this.setState(
-        {
-          deepLanguageCollection: {
-            ...this.state.deepLanguageCollection,
-            // [key] :this.state.deepLanguageCollection[key]? this.state.deepLanguageCollection[key]+value:value,
-            [key]: value,
-          },
 
-          [key]: value,
-        },
-        () => {
-          console.log('state', this.state);
-          // console.log(
-          //   'state. deepLanguageCollection',
-          //   this.state.deepLanguageCollection
-          // );
-        }
-      );
-      // html-165282
-      // console.log('dictionary', dictionary);
+      if (deepLanguageCollection!=null && deepLanguageCollection[key]!=null) {
+        // deepLanguageCollection.push({
+        //   key: Object.keys(this.state.repoLanguageResponse)[i],
+        //   value: value*0.00001,
+        // });
+        deepLanguageCollection[keyString]=deepLanguageCollection[key]+value;
+      } else {
+        deepLanguageCollection[keyString]=value;
+      }
+      console.log("deepLanguageCollection",deepLanguageCollection)
+
     }
-    // const parsed = JSON.parse(this.state.repoLanguageResponse);
-    // console.log("parsed", this.state.repoLanguageResponse)
-    // const result = this.state.repoLanguageResponse.map(entry => {
-    //   console.log('entry', entry);
-    //   Object.keys(entry)
-    //   }
-    //   );
-
-    // console.log("hi", this.state.repoLanguageResponse.keys(ahash)[i]);
-    // dictionary.push({
-    //   key: 'keyName',
-    //   value: 'the value',
-    // });
-
-    // this.setState(
-    //   {
-    //     deepLanguageCollection: dictionary,
-
-    //   },
-    //   () => {
-    //     console.log('hola', this.state.deepLanguageCollection);
-    //   }
-    // );
   };
 
   render() {
