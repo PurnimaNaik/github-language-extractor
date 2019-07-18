@@ -6,10 +6,13 @@ import {
   TextInput,
   Dimensions,
   Image,
+  FlatList,
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
+import ProgressBar from './ProgressBar';
 var deepLanguageCollection = {};
-var total=null;
+var total = null;
+let progressBars = null;
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +21,8 @@ class SearchBar extends React.Component {
       languageURlCollection: [],
       response: null,
       repoLanguageResponse: null,
+      deepLanguageCollectionInState: null,
+      totalInState: null,
     };
   }
 
@@ -70,7 +75,7 @@ class SearchBar extends React.Component {
   getDeepLanguagePool = () => {
     // console.log('getDeepLanguagePool');
     for (i = 0; i < this.state.languageURlCollection.length; i++) {
-    // for (i = 0; i <= 1; i++) {
+    // for (i = 0; i <= 0; i++) {
       try {
         fetch(this.state.languageURlCollection[i], {
           method: 'GET',
@@ -96,33 +101,50 @@ class SearchBar extends React.Component {
     }
   };
 
-
   poolLanguagesFromRepos = () => {
     var key, value, keyString;
-    console.log('RESPONSE', this.state.repoLanguageResponse);
+    // console.log('RESPONSE', this.state.repoLanguageResponse);
     for (i = 0; i < Object.keys(this.state.repoLanguageResponse).length; i++) {
       // console.log("Object.keys(this.state.repoLanguageResponse)[i]",Object.keys(this.state.repoLanguageResponse)[i]);
       key = Object.keys(this.state.repoLanguageResponse)[i];
       value = this.state.repoLanguageResponse[
         Object.keys(this.state.repoLanguageResponse)[i]
       ];
-      total+=value;
-      keyString=key.toString();
+      total += value;
+      keyString = key.toString();
 
-
-      if (deepLanguageCollection!=null && deepLanguageCollection[key]!=null) {
-        // deepLanguageCollection.push({
-        //   key: Object.keys(this.state.repoLanguageResponse)[i],
-        //   value: value*0.00001,
-        // });
-        deepLanguageCollection[keyString]=deepLanguageCollection[key]+value;
+      if (
+        deepLanguageCollection != null &&
+        deepLanguageCollection[key] != null
+      ) {
+        deepLanguageCollection[keyString] = deepLanguageCollection[key] + value;
       } else {
-        deepLanguageCollection[keyString]=value;
+        deepLanguageCollection[keyString] = value;
       }
-      console.log("deepLanguageCollection",deepLanguageCollection)
-      console.log("total",total)
-
+      // console.log("deepLanguageCollection",deepLanguageCollection)
+      // console.log("total",total)
     }
+    this.setState({
+      deepLanguageCollectionInState: deepLanguageCollection,
+      totalInState: total,
+    });
+    this.renderProgressBars(deepLanguageCollection, total);
+  };
+  // (java/total)*100
+
+  renderProgressBars = (deepLanguageCollection) => {
+
+    const keys = Object.keys(deepLanguageCollection); // Get all keys from dictionary
+    return keys.map((iteratorKey) => {
+      return (
+        // <Text key={iteratorKey}>{iteratorKey}-{deepLanguageCollection[iteratorKey]}</Text>
+        <View>
+<ProgressBar percentage={(((deepLanguageCollection[iteratorKey]/this.state.totalInState)*100).toFixed(2))} language={iteratorKey} />
+        </View>
+        
+      )
+    })
+
   };
 
   render() {
@@ -139,11 +161,33 @@ class SearchBar extends React.Component {
             onSubmitEditing={event => this.getUserRepos(event.nativeEvent.text)}
           />
         </View>
+        
+        <View>
+          {
+            this.state.deepLanguageCollectionInState?
+            <View style={styles.progressBarConatiner}>
+            {this.renderProgressBars(this.state.deepLanguageCollectionInState)}
+            </View>
+            
+          : 
+          null
+          }
+
+        </View>
       </View>
     );
   }
 }
 
+{/* <FlatList
+data={this.state.deepLanguageCollectionInState}
+// keyExtractor={(item, index) => index.toString()}
+// renderItem={({ item }) => {
+//   // if(!this.state.showStationsDrawer){
+//   return this.renderProgressBars(item);
+//   //  }
+// }}
+/> */}
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -177,6 +221,9 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     position: 'absolute',
   },
+  progressBarConatiner:{
+marginTop:50,
+  }
 });
 
 export default SearchBar;
