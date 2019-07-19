@@ -24,7 +24,9 @@ const App = () => {
         <SearchBar />
       </View>
       
-
+      <View style={styles.bottomPadding}>
+          <Text>hi</Text>
+          </View>
       </SafeAreaView>
     </Fragment>
   );
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
   title:{
     // fontFamily:'Cochin',
     // fontFamily:'Helvetica',
-    fontSize:20,
+    fontSize:23,
     color:'white',
     marginLeft:15
   },
@@ -86,6 +88,13 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     textAlign: 'right',
   },
+  bottomPadding:{
+    // position:"absolute",
+    height:50,
+    width:Dimensions.get('window').width,
+    // alignSelf: 'stretch',
+    backgroundColor:'red',
+  }
 });
 
 export default App;

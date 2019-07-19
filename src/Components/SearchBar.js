@@ -166,7 +166,7 @@ class SearchBar extends React.Component {
 
   renderProgressBars = deepLanguageCollection => {
     const keys = Object.keys(deepLanguageCollection); // Get all keys from dictionary
-    return keys.map(iteratorKey => {
+    return keys.map((iteratorKey,index) => {
       return (
         <ProgressBar
           key={iteratorKey}
@@ -175,6 +175,7 @@ class SearchBar extends React.Component {
             100
           ).toFixed(2)}
           language={iteratorKey}
+          color='#36c93d'
         />
       );
     });
@@ -263,16 +264,17 @@ class SearchBar extends React.Component {
         </View>
 
         {this.state.deepLanguageCollectionInState ? (
+          <Text style={styles.disclaimer}>
+            {/* {this.state.searchedUsername}'s distribution */}
+            Username: {this.state.searchedUsername}
+          </Text>
+        ) : null}
+
+        {/* {this.state.deepLanguageCollectionInState ? (
         <View style={styles.divider} />
-        ) : null}
+        ) : null} */}
 
-        {this.state.deepLanguageCollectionInState ? (
-            <Text style={styles.disclaimer}>
-              {this.state.searchedUsername}'s Language Distribution
-            </Text>
-        ) : null}
-
-        <ScrollView>
+        <ScrollView style={styles.scrollViewContainer}>
           {this.state.deepLanguageCollectionInState ? (
             <View style={styles.progressBarConatiner}>
               {this.renderProgressBars(
@@ -281,6 +283,8 @@ class SearchBar extends React.Component {
             </View>
           ) : null}
         </ScrollView>
+
+
       </View>
     );
   }
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 10,
   },
   searchBox: {
     flexDirection: 'row',
@@ -321,7 +325,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     width: Dimensions.get('window').width - 100,
-    fontSize: 17,
+    fontSize: 19,
   },
   searchIcon: {
     height: 30,
@@ -344,7 +348,7 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: '#6AB9FF',
-    fontSize: 15,
+    fontSize: 17,
     textAlign: 'center',
   },
   errorMessageContainer: {
@@ -353,24 +357,34 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 100,
   },
   disclaimer: {
-    fontSize: 16,
+    color: 'black',
+    fontSize: 19,
+    marginLeft: 10,
+    alignSelf: 'stretch',
+    marginTop: 30,
+    paddingBottom:10,
   },
   divider: {
     borderBottomColor: '#C6C6C6',
     borderBottomWidth: StyleSheet.hairlineWidth,
     // alignSelf: 'stretch',
-    width:Dimensions.get('window').width,
+    width: Dimensions.get('window').width,
     marginBottom: 20,
   },
+  scrollViewContainer:{
+    // marginBottom:20,
+    backgroundColor:'pink'
+  }
 });
 
 export default SearchBar;
 
-// console.log("response------",response.status)
-// if(response.status==200){
-
-// }
-// else {
-//   Alert.alert("not 200");
-//   return;
-// }
+const colors = [
+  '#36c93d',
+  '#ffc103',
+  '#db0000',
+  '#0049e6',
+  '#ff8c00',
+  '#ffc0cb',
+  '#29b6f6',
+];

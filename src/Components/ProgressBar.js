@@ -39,7 +39,7 @@ class ProgressBar extends React.Component {
     return (
       <View key={this.props.language}>
         <Text style={styles.label}>
-          {this.props.language}-{this.props.percentage}%
+        {this.props.language} : {this.props.percentage}% 
         </Text>
 
         <View style={styles.container}>
@@ -52,6 +52,8 @@ class ProgressBar extends React.Component {
                   inputRange: [0, 1],
                   outputRange: ['0%', '1%'],
                 }),
+                backgroundColor:this.props.color
+                
               },
             ]}
           />
@@ -73,11 +75,12 @@ const styles = StyleSheet.create({
     // width: ((Dimensions.get('window').width - 50)*90)/100,
     //(((Dimensions.get('window').width - 50)*this.state.progressStatus)/100)
     height: 30,
-    backgroundColor: 'green',
+    // backgroundColor: 'green',
     justifyContent: 'center',
   },
   label: {
     color: 'black',
+    fontSize: 15,
     // marginLeft: 10,
   },
 });
