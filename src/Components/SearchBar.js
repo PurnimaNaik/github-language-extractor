@@ -29,19 +29,21 @@ class SearchBar extends React.Component {
       searchedUsername: null,
       searchEmpty: true,
       errorMessage: null,
-      invalidUsernameMessage: 'Username invalid. Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen',
+      invalidUsernameMessage:
+        'Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.',
       borderBottomColor: 'transparent',
     };
   }
 
   getUserRepos = username => {
     if (this.state.borderBottomColor != 'red') {
-
       this.setState({
         searchedUsername: username.trim(),
         searchEmpty: true,
         errorMessage: null,
-        borderBottomColor:'transparent',
+        borderBottomColor: 'transparent',
+        deepLanguageCollectionInState: null,
+        // invalidUsernameMessage:null,
       });
       try {
         fetch('https://api.github.com/users/' + username + '/repos', {
@@ -54,13 +56,12 @@ class SearchBar extends React.Component {
           .then(response => response.json())
 
           .then(responseJson => {
-            console.log("responseJson",responseJson);
-            if(responseJson.length==0){
+            console.log('responseJson', responseJson);
+            if (responseJson.length == 0) {
               this.setState({
-                errorMessage: "User has no projects on Github",
+                errorMessage: 'User has no projects on Github.',
               });
-            }
-            else if (responseJson.message) {
+            } else if (responseJson.message) {
               this.setState({
                 errorMessage: responseJson.message,
               });
@@ -106,7 +107,7 @@ class SearchBar extends React.Component {
   getDeepLanguagePool = () => {
     // console.log('getDeepLanguagePool');
     for (i = 0; i < this.state.languageURlCollection.length; i++) {
-    // for (i = 0; i <= 1; i++) {
+      // for (i = 0; i <= 1; i++) {
       try {
         fetch(this.state.languageURlCollection[i], {
           method: 'GET',
@@ -184,7 +185,8 @@ class SearchBar extends React.Component {
     this.setState({
       searchEmpty: true,
       errorMessage: null,
-      borderBottomColor:'transparent',
+      borderBottomColor: 'transparent',
+      deepLanguageCollectionInState: null,
     });
   };
 
@@ -205,13 +207,14 @@ class SearchBar extends React.Component {
     if (input != '') {
       this.setState({
         searchEmpty: false,
-        
+        deepLanguageCollectionInState: null,
       });
     } else {
       this.setState({
         searchEmpty: true,
         errorMessage: null,
-        borderBottomColor:'transparent'
+        borderBottomColor: 'transparent',
+        deepLanguageCollectionInState: null,
       });
     }
   };
@@ -248,15 +251,25 @@ class SearchBar extends React.Component {
             </TouchableOpacity>
           )}
         </View>
+        <View style={styles.errorMessageContainer}>
+          {this.state.borderBottomColor == 'red' ? (
+            <Text style={styles.errorMessage}>
+              {this.state.invalidUsernameMessage}
+            </Text>
+          ) : null}
+          {this.state.errorMessage ? (
+            <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
+          ) : null}
+        </View>
 
-        {this.state.borderBottomColor == 'red' ? (
-          <Text>{this.state.invalidUsernameMessage}</Text>
-        ) : null}
-        {this.state.errorMessage ? (
-          <Text>{this.state.errorMessage}</Text>
-        ) : null}
         {this.state.deepLanguageCollectionInState ? (
-          <Text>{this.state.searchedUsername}'s Language Distribution</Text>
+        <View style={styles.divider} />
+        ) : null}
+
+        {this.state.deepLanguageCollectionInState ? (
+            <Text style={styles.disclaimer}>
+              {this.state.searchedUsername}'s Language Distribution
+            </Text>
         ) : null}
 
         <ScrollView>
@@ -288,6 +301,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 5,
   },
   searchBox: {
     flexDirection: 'row',
@@ -298,11 +312,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 30,
     borderRadius: 5,
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    marginTop: 25,
-    marginBottom: 40,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    marginTop: 15,
+    marginBottom: 20,
     borderBottomWidth: 1,
   },
   textBox: {
@@ -327,6 +341,26 @@ const styles = StyleSheet.create({
   },
   progressBarConatiner: {
     marginTop: 20,
+  },
+  errorMessage: {
+    color: '#6AB9FF',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  errorMessageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Dimensions.get('window').width - 100,
+  },
+  disclaimer: {
+    fontSize: 16,
+  },
+  divider: {
+    borderBottomColor: '#C6C6C6',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    // alignSelf: 'stretch',
+    width:Dimensions.get('window').width,
+    marginBottom: 20,
   },
 });
 

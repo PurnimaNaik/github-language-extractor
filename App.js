@@ -7,7 +7,7 @@
  */
 
 import React, { Fragment } from 'react';
-import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native';
 
 import SearchBar from './src/Components/SearchBar';
 import Colors from './src/Utils/Colors';
@@ -17,9 +17,13 @@ const App = () => {
     <Fragment>
       <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
-      <Text>Github Language Extractor</Text>
+      <View style={styles.titleContainer}>
+      <Text style={styles.title}>Github Language Extractor</Text>
+      </View>
+      
         <SearchBar />
       </View>
+      
 
       </SafeAreaView>
     </Fragment>
@@ -32,8 +36,21 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     alignItems: 'center',
   },
+  titleContainer:{
+    width:Dimensions.get('window').width,
+    backgroundColor:'#6AB9FF',
+    height:40,
+    justifyContent:'center',
+  },
+  title:{
+    // fontFamily:'Cochin',
+    // fontFamily:'Helvetica',
+    fontSize:20,
+    color:'white',
+    marginLeft:15
+  },
   contentContainer: {
-    marginTop:25,
+    marginTop:20,
     alignItems: 'center',
   },
   engine: {
