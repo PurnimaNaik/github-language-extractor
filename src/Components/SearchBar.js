@@ -29,44 +29,46 @@ class SearchBar extends React.Component {
       searchedUsername: null,
       searchEmpty: true,
       errorMessage: null,
+      invalidUsernameMessage: 'username entered is invalid',
+      borderBottomColor: 'transparent',
     };
   }
 
   getUserRepos = username => {
-    this.setState({
-      searchedUsername: username.trim(),
-    });
-    try {
-      fetch('https://api.github.com/users/' + username + '/repos', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(response => response.json())
+    if (this.state.borderBottomColor != 'red') {
+      this.setState({
+        searchedUsername: username.trim(),
+      });
+      try {
+        fetch('https://api.github.com/users/' + username + '/repos', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+          .then(response => response.json())
 
-        .then(responseJson => {
-          console.log('responseJson', responseJson);
-          if (responseJson.message) {
-            this.setState({
-              errorMessage:
-                'Something went wrong, please try again with a different username',
-            });
-          } else {
-            this.setState(
-              {
-                response: responseJson,
-              },
-              () => {
-                this.getShallowLanguagePool();
-                this.textInput.clear();
-              }
-            );
-          }
-        });
-    } catch (error) {
-      console.log(error);
+          .then(responseJson => {
+            if (responseJson.message) {
+              this.setState({
+                errorMessage: responseJson.message,
+              });
+            } else {
+              this.setState(
+                {
+                  response: responseJson,
+                },
+                () => {
+                  this.getShallowLanguagePool();
+                  this.textInput.clear();
+                }
+              );
+            }
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -171,19 +173,35 @@ class SearchBar extends React.Component {
     this.textInput.clear();
     this.setState({
       searchEmpty: true,
-      errorMessage: null,    
+      errorMessage: null,
+      borderBottomColor:'transparent',
     });
   };
 
   validateInput = input => {
+    var regex = '^[A-Za-z0-9][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*$';
+    var validInput = input.match(regex);
+
+    if (validInput) {
+      this.setState({
+        borderBottomColor: 'green',
+      });
+    } else {
+      this.setState({
+        borderBottomColor: 'red',
+      });
+    }
+
     if (input != '') {
       this.setState({
         searchEmpty: false,
+        
       });
     } else {
       this.setState({
         searchEmpty: true,
         errorMessage: null,
+        borderBottomColor:'transparent'
       });
     }
   };
@@ -191,7 +209,12 @@ class SearchBar extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.searchBox}>
+        <View
+          style={[
+            styles.searchBox,
+            { borderBottomColor: this.state.borderBottomColor },
+          ]}
+        >
           <Image
             style={styles.searchIcon}
             source={require('../Images/searchIcon.png')}
@@ -216,6 +239,9 @@ class SearchBar extends React.Component {
           )}
         </View>
 
+        {this.state.borderBottomColor == 'red' ? (
+          <Text>{this.state.invalidUsernameMessage}</Text>
+        ) : null}
         {this.state.errorMessage ? (
           <Text>{this.state.errorMessage}</Text>
         ) : null}
@@ -267,6 +293,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     marginTop: 25,
     marginBottom: 40,
+    borderBottomWidth: 1,
   },
   textBox: {
     width: Dimensions.get('window').width - 100,
