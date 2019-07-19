@@ -163,18 +163,18 @@ class SearchBar extends React.Component {
     this.textInput.clear();
   };
 
-  validateInput = () => {
+  validateInput = (input) => {
     // this.setState({
     //   searchedUsername:"",
     // })
-    console.log("Validate",this.textInput._lastNativeText)
-    if (this.textInput === "") {
+    console.log("Validate",input)
+    if (input != "") {
       this.setState({
-        searchEmpty: true,
+        searchEmpty: false,
       });
     } else {
       this.setState({
-        searchEmpty: false,
+        searchEmpty: true,
       });
     }
   };
@@ -194,7 +194,7 @@ class SearchBar extends React.Component {
             ref={input => {
               this.textInput = input;
             }}
-            onChange={this.validateInput}
+            onChange={event => this.validateInput(event.nativeEvent.text)}
           />
 
           {this.state.searchEmpty ? null : (
