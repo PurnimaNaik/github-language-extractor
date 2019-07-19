@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
   FlatList,
+  ScrollView
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 import ProgressBar from './ProgressBar';
@@ -74,8 +75,8 @@ class SearchBar extends React.Component {
 
   getDeepLanguagePool = () => {
     // console.log('getDeepLanguagePool');
-    for (i = 0; i < this.state.languageURlCollection.length; i++) {
-    // for (i = 0; i <= 0; i++) {
+    // for (i = 0; i < this.state.languageURlCollection.length; i++) {
+    for (i = 0; i <= 1; i++) {
       try {
         fetch(this.state.languageURlCollection[i], {
           method: 'GET',
@@ -138,8 +139,8 @@ class SearchBar extends React.Component {
     return keys.map((iteratorKey) => {
       return (
         // <Text key={iteratorKey}>{iteratorKey}-{deepLanguageCollection[iteratorKey]}</Text>
-        <View>
-<ProgressBar percentage={(((deepLanguageCollection[iteratorKey]/this.state.totalInState)*100).toFixed(2))} language={iteratorKey} />
+        <View key={iteratorKey}>
+<ProgressBar key={iteratorKey} percentage={(((deepLanguageCollection[iteratorKey]/this.state.totalInState)*100).toFixed(2))} language={iteratorKey} />
         </View>
         
       )
@@ -162,7 +163,7 @@ class SearchBar extends React.Component {
           />
         </View>
         
-        <View>
+        <ScrollView>
           {
             this.state.deepLanguageCollectionInState?
             <View style={styles.progressBarConatiner}>
@@ -173,7 +174,7 @@ class SearchBar extends React.Component {
           null
           }
 
-        </View>
+        </ScrollView>
       </View>
     );
   }
