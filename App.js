@@ -17,7 +17,7 @@ const App = () => {
     <Fragment>
       <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
-      {/* <Text>Github Language Extractor</Text> */}
+      <Text>Github Language Extractor</Text>
         <SearchBar />
       </View>
 

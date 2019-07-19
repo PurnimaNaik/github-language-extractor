@@ -29,15 +29,19 @@ class SearchBar extends React.Component {
       searchedUsername: null,
       searchEmpty: true,
       errorMessage: null,
-      invalidUsernameMessage: 'username entered is invalid',
+      invalidUsernameMessage: 'Username invalid. Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen',
       borderBottomColor: 'transparent',
     };
   }
 
   getUserRepos = username => {
     if (this.state.borderBottomColor != 'red') {
+
       this.setState({
         searchedUsername: username.trim(),
+        searchEmpty: true,
+        errorMessage: null,
+        borderBottomColor:'transparent',
       });
       try {
         fetch('https://api.github.com/users/' + username + '/repos', {
@@ -50,7 +54,13 @@ class SearchBar extends React.Component {
           .then(response => response.json())
 
           .then(responseJson => {
-            if (responseJson.message) {
+            console.log("responseJson",responseJson);
+            if(responseJson.length==0){
+              this.setState({
+                errorMessage: "User has no projects on Github",
+              });
+            }
+            else if (responseJson.message) {
               this.setState({
                 errorMessage: responseJson.message,
               });
@@ -95,8 +105,8 @@ class SearchBar extends React.Component {
 
   getDeepLanguagePool = () => {
     // console.log('getDeepLanguagePool');
-    // for (i = 0; i < this.state.languageURlCollection.length; i++) {
-    for (i = 0; i <= 1; i++) {
+    for (i = 0; i < this.state.languageURlCollection.length; i++) {
+    // for (i = 0; i <= 1; i++) {
       try {
         fetch(this.state.languageURlCollection[i], {
           method: 'GET',
