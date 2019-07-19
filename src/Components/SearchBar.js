@@ -25,14 +25,15 @@ class SearchBar extends React.Component {
       repoLanguageResponse: null,
       deepLanguageCollectionInState: null,
       totalInState: null,
-      searchedUsername:null,
+      searchedUsername: null,
+      searchEmpty: true,
     };
   }
 
   getUserRepos = username => {
     this.setState({
-      searchedUsername:username,
-    })
+      searchedUsername: username.trim(),
+    });
     try {
       fetch('https://api.github.com/users/' + username + '/repos', {
         method: 'GET',
@@ -155,12 +156,28 @@ class SearchBar extends React.Component {
     });
   };
 
-  clearSearchText=()=>{
+  clearSearchText = () => {
     // this.setState({
     //   searchedUsername:"",
     // })
     this.textInput.clear();
-  }
+  };
+
+  validateInput = () => {
+    // this.setState({
+    //   searchedUsername:"",
+    // })
+    console.log("Validate",this.textInput._lastNativeText)
+    if (this.textInput === "") {
+      this.setState({
+        searchEmpty: true,
+      });
+    } else {
+      this.setState({
+        searchEmpty: false,
+      });
+    }
+  };
 
   render() {
     return (
@@ -174,21 +191,25 @@ class SearchBar extends React.Component {
             style={styles.textBox}
             placeholder="Enter username"
             onSubmitEditing={event => this.getUserRepos(event.nativeEvent.text)}
-            ref={input => { this.textInput = input }} 
+            ref={input => {
+              this.textInput = input;
+            }}
+            onChange={this.validateInput}
           />
- 
 
-          <TouchableOpacity onPress={this.clearSearchText}>
-            <Image
-              style={styles.cancelIcon}
-              source={require('../Images/cancel.png')}
-            />
-          </TouchableOpacity>
+          {this.state.searchEmpty ? null : (
+            <TouchableOpacity onPress={this.clearSearchText}>
+              <Image
+                style={styles.cancelIcon}
+                source={require('../Images/cancel.png')}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
-        {this.state.deepLanguageCollectionInState?
-        <Text>{this.state.searchedUsername}'s Language Distribution</Text>:null
-        }
+        {this.state.deepLanguageCollectionInState ? (
+          <Text>{this.state.searchedUsername}'s Language Distribution</Text>
+        ) : null}
 
         <ScrollView>
           {this.state.deepLanguageCollectionInState ? (
