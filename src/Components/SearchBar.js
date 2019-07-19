@@ -138,11 +138,7 @@ class SearchBar extends React.Component {
     const keys = Object.keys(deepLanguageCollection); // Get all keys from dictionary
     return keys.map((iteratorKey) => {
       return (
-        // <Text key={iteratorKey}>{iteratorKey}-{deepLanguageCollection[iteratorKey]}</Text>
-        <View key={iteratorKey}>
-<ProgressBar key={iteratorKey} percentage={(((deepLanguageCollection[iteratorKey]/this.state.totalInState)*100).toFixed(2))} language={iteratorKey} />
-        </View>
-        
+<ProgressBar key={iteratorKey} percentage={(((deepLanguageCollection[iteratorKey]/this.state.totalInState)*100).toFixed(2))} language={iteratorKey} />      
       )
     })
 
@@ -161,7 +157,13 @@ class SearchBar extends React.Component {
             placeholder="Enter username"
             onSubmitEditing={event => this.getUserRepos(event.nativeEvent.text)}
           />
+                  <Image
+            style={styles.cancelIcon}
+            source={require('../Images/cancel.png')}
+          />
         </View>
+
+
         
         <ScrollView>
           {
@@ -199,9 +201,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     // justifyContent: 'center',
     alignItems: 'center',
-    height: 30,
-    width: Dimensions.get('window').width - 50,
-    borderRadius: 45,
+    height: 40,
+    width: Dimensions.get('window').width - 30,
+    borderRadius: 5,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.1,
@@ -210,13 +212,19 @@ const styles = StyleSheet.create({
   },
   textBox: {
     width: Dimensions.get('window').width - 100,
+    fontSize:17,
   },
   searchIcon: {
-    height: 23,
-    width: 23,
-    marginLeft: 10,
-    marginRight: 5,
+    height: 30,
+    width: 30,
+    marginLeft: 5,
+    marginRight: 2,
     justifyContent: 'center',
+  },
+  cancelIcon:{
+    height: 16,
+    width: 16,
+    opacity:0.5,
   },
   categoryTwo: {
     opacity: 0.5,
