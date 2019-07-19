@@ -9,6 +9,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 import ProgressBar from './ProgressBar';
@@ -27,6 +28,7 @@ class SearchBar extends React.Component {
       totalInState: null,
       searchedUsername: null,
       searchEmpty: true,
+      errorMessage: null,
     };
   }
 
@@ -43,16 +45,25 @@ class SearchBar extends React.Component {
         },
       })
         .then(response => response.json())
+
         .then(responseJson => {
-          this.setState(
-            {
-              response: responseJson,
-            },
-            () => {
-              this.getShallowLanguagePool();
-              this.textInput.clear();
-            }
-          );
+          console.log('responseJson', responseJson);
+          if (responseJson.message) {
+            this.setState({
+              errorMessage:
+                'Something went wrong, please try again with a different username',
+            });
+          } else {
+            this.setState(
+              {
+                response: responseJson,
+              },
+              () => {
+                this.getShallowLanguagePool();
+                this.textInput.clear();
+              }
+            );
+          }
         });
     } catch (error) {
       console.log(error);
@@ -157,24 +168,22 @@ class SearchBar extends React.Component {
   };
 
   clearSearchText = () => {
-    // this.setState({
-    //   searchedUsername:"",
-    // })
     this.textInput.clear();
+    this.setState({
+      searchEmpty: true,
+      errorMessage: null,    
+    });
   };
 
-  validateInput = (input) => {
-    // this.setState({
-    //   searchedUsername:"",
-    // })
-    console.log("Validate",input)
-    if (input != "") {
+  validateInput = input => {
+    if (input != '') {
       this.setState({
         searchEmpty: false,
       });
     } else {
       this.setState({
         searchEmpty: true,
+        errorMessage: null,
       });
     }
   };
@@ -207,6 +216,9 @@ class SearchBar extends React.Component {
           )}
         </View>
 
+        {this.state.errorMessage ? (
+          <Text>{this.state.errorMessage}</Text>
+        ) : null}
         {this.state.deepLanguageCollectionInState ? (
           <Text>{this.state.searchedUsername}'s Language Distribution</Text>
         ) : null}
@@ -282,3 +294,12 @@ const styles = StyleSheet.create({
 });
 
 export default SearchBar;
+
+// console.log("response------",response.status)
+// if(response.status==200){
+
+// }
+// else {
+//   Alert.alert("not 200");
+//   return;
+// }
