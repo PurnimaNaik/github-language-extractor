@@ -7,7 +7,8 @@ import {
   Dimensions,
   Image,
   FlatList,
-  ScrollView
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 import ProgressBar from './ProgressBar';
@@ -24,10 +25,14 @@ class SearchBar extends React.Component {
       repoLanguageResponse: null,
       deepLanguageCollectionInState: null,
       totalInState: null,
+      searchedUsername:null,
     };
   }
 
   getUserRepos = username => {
+    this.setState({
+      searchedUsername:username,
+    })
     try {
       fetch('https://api.github.com/users/' + username + '/repos', {
         method: 'GET',
@@ -44,6 +49,7 @@ class SearchBar extends React.Component {
             },
             () => {
               this.getShallowLanguagePool();
+              this.textInput.clear();
             }
           );
         });
@@ -133,16 +139,28 @@ class SearchBar extends React.Component {
   };
   // (java/total)*100
 
-  renderProgressBars = (deepLanguageCollection) => {
-
+  renderProgressBars = deepLanguageCollection => {
     const keys = Object.keys(deepLanguageCollection); // Get all keys from dictionary
-    return keys.map((iteratorKey) => {
+    return keys.map(iteratorKey => {
       return (
-<ProgressBar key={iteratorKey} percentage={(((deepLanguageCollection[iteratorKey]/this.state.totalInState)*100).toFixed(2))} language={iteratorKey} />      
-      )
-    })
-
+        <ProgressBar
+          key={iteratorKey}
+          percentage={(
+            (deepLanguageCollection[iteratorKey] / this.state.totalInState) *
+            100
+          ).toFixed(2)}
+          language={iteratorKey}
+        />
+      );
+    });
   };
+
+  clearSearchText=()=>{
+    // this.setState({
+    //   searchedUsername:"",
+    // })
+    this.textInput.clear();
+  }
 
   render() {
     return (
@@ -156,33 +174,38 @@ class SearchBar extends React.Component {
             style={styles.textBox}
             placeholder="Enter username"
             onSubmitEditing={event => this.getUserRepos(event.nativeEvent.text)}
+            ref={input => { this.textInput = input }} 
           />
-                  <Image
-            style={styles.cancelIcon}
-            source={require('../Images/cancel.png')}
-          />
+ 
+
+          <TouchableOpacity onPress={this.clearSearchText}>
+            <Image
+              style={styles.cancelIcon}
+              source={require('../Images/cancel.png')}
+            />
+          </TouchableOpacity>
         </View>
 
+        {this.state.deepLanguageCollectionInState?
+        <Text>{this.state.searchedUsername}'s Language Distribution</Text>:null
+        }
 
-        
         <ScrollView>
-          {
-            this.state.deepLanguageCollectionInState?
+          {this.state.deepLanguageCollectionInState ? (
             <View style={styles.progressBarConatiner}>
-            {this.renderProgressBars(this.state.deepLanguageCollectionInState)}
+              {this.renderProgressBars(
+                this.state.deepLanguageCollectionInState
+              )}
             </View>
-            
-          : 
-          null
-          }
-
+          ) : null}
         </ScrollView>
       </View>
     );
   }
 }
 
-{/* <FlatList
+{
+  /* <FlatList
 data={this.state.deepLanguageCollectionInState}
 // keyExtractor={(item, index) => index.toString()}
 // renderItem={({ item }) => {
@@ -190,7 +213,8 @@ data={this.state.deepLanguageCollectionInState}
 //   return this.renderProgressBars(item);
 //   //  }
 // }}
-/> */}
+/> */
+}
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -209,10 +233,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     marginTop: 25,
+    marginBottom: 40,
   },
   textBox: {
     width: Dimensions.get('window').width - 100,
-    fontSize:17,
+    fontSize: 17,
   },
   searchIcon: {
     height: 30,
@@ -221,18 +246,18 @@ const styles = StyleSheet.create({
     marginRight: 2,
     justifyContent: 'center',
   },
-  cancelIcon:{
+  cancelIcon: {
     height: 16,
     width: 16,
-    opacity:0.5,
+    opacity: 0.5,
   },
   categoryTwo: {
     opacity: 0.5,
     position: 'absolute',
   },
-  progressBarConatiner:{
-marginTop:50,
-  }
+  progressBarConatiner: {
+    marginTop: 20,
+  },
 });
 
 export default SearchBar;
