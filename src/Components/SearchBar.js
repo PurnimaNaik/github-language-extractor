@@ -36,50 +36,56 @@ class SearchBar extends React.Component {
   }
 
   getUserRepos = username => {
+    // this.deepLanguageCollection={};
     if (this.state.borderBottomColor != 'red') {
+      deepLanguageCollection={};
+      total = null;
       this.setState({
         searchedUsername: username.trim(),
         searchEmpty: true,
         errorMessage: null,
         borderBottomColor: 'transparent',
-        deepLanguageCollectionInState: null,
-        // invalidUsernameMessage:null,
+        deepLanguageCollectionInState: [],
+        languageCollection: [],
+        languageURlCollection: [],
+        totalInState: null,
+      },()=>{
+        try {
+          fetch('https://api.github.com/users/' + username + '/repos', {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+            .then(response => response.json())
+  
+            .then(responseJson => {
+              this.textInput.clear();
+              if (responseJson.length == 0) {
+                this.setState({
+                  errorMessage: 'User has no projects on Github.',
+                });
+              } else if (responseJson.message) {
+                this.setState({
+                  errorMessage: responseJson.message,
+                });
+              } else {
+                this.setState(
+                  {
+                    response: responseJson,
+                  },
+                  () => {
+                    this.getShallowLanguagePool();
+                  }
+                );
+              }
+            });
+        } catch (error) {
+          console.log(error);
+        }
       });
-      try {
-        fetch('https://api.github.com/users/' + username + '/repos', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then(response => response.json())
-
-          .then(responseJson => {
-            console.log('responseJson', responseJson);
-            if (responseJson.length == 0) {
-              this.setState({
-                errorMessage: 'User has no projects on Github.',
-              });
-            } else if (responseJson.message) {
-              this.setState({
-                errorMessage: responseJson.message,
-              });
-            } else {
-              this.setState(
-                {
-                  response: responseJson,
-                },
-                () => {
-                  this.getShallowLanguagePool();
-                  this.textInput.clear();
-                }
-              );
-            }
-          });
-      } catch (error) {
-        console.log(error);
-      }
+      
     }
   };
 
@@ -166,7 +172,15 @@ class SearchBar extends React.Component {
 
   renderProgressBars = deepLanguageCollection => {
     const keys = Object.keys(deepLanguageCollection); // Get all keys from dictionary
-    return keys.map((iteratorKey,index) => {
+    // console.log("deepLanguageCollectionInState",this.state.deepLanguageCollectionInState);
+    // console.log("totalInState",this.state.totalInState);
+    // console.log("deepLanguageCollection",this.deepLanguageCollection);
+    // console.log("searchedUsername",this.state.searchedUsername);
+
+
+    return keys.map((iteratorKey, index) => {
+      console.log((deepLanguageCollection[iteratorKey] / this.state.totalInState) *100)
+      console.log("_______________________________________")
       return (
         <ProgressBar
           key={iteratorKey}
@@ -175,7 +189,7 @@ class SearchBar extends React.Component {
             100
           ).toFixed(2)}
           language={iteratorKey}
-          color='#36c93d'
+          color="#36c93d"
         />
       );
     });
@@ -183,11 +197,14 @@ class SearchBar extends React.Component {
 
   clearSearchText = () => {
     this.textInput.clear();
+    // deepLanguageCollection={};
     this.setState({
       searchEmpty: true,
       errorMessage: null,
       borderBottomColor: 'transparent',
       deepLanguageCollectionInState: null,
+      languageCollection: [],
+      languageURlCollection: [],
     });
   };
 
@@ -211,16 +228,20 @@ class SearchBar extends React.Component {
         deepLanguageCollectionInState: null,
       });
     } else {
+      // this.deepLanguageCollection={};
       this.setState({
         searchEmpty: true,
         errorMessage: null,
         borderBottomColor: 'transparent',
         deepLanguageCollectionInState: null,
+        languageCollection: [],
+        languageURlCollection: [],
       });
     }
   };
 
   render() {
+
     return (
       <View style={styles.container}>
         <View
@@ -274,17 +295,17 @@ class SearchBar extends React.Component {
         <View style={styles.divider} />
         ) : null} */}
 
-        <ScrollView style={styles.scrollViewContainer}>
-          {this.state.deepLanguageCollectionInState ? (
-            <View style={styles.progressBarConatiner}>
-              {this.renderProgressBars(
-                this.state.deepLanguageCollectionInState
-              )}
-            </View>
-          ) : null}
-        </ScrollView>
-
-
+        <View style={styles.scrollViewHeightContainer}>
+          <View style={styles.scrollViewContainer}>
+            {this.state.deepLanguageCollectionInState ? (
+              <ScrollView style={styles.progressBarConatiner}>
+                {this.renderProgressBars(
+                  this.state.deepLanguageCollectionInState
+                )}
+              </ScrollView>
+            ) : null}
+          </View>
+        </View>
       </View>
     );
   }
@@ -345,6 +366,7 @@ const styles = StyleSheet.create({
   },
   progressBarConatiner: {
     marginTop: 20,
+    height: 50,
   },
   errorMessage: {
     color: '#6AB9FF',
@@ -362,7 +384,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     alignSelf: 'stretch',
     marginTop: 30,
-    paddingBottom:10,
+    paddingBottom: 10,
   },
   divider: {
     borderBottomColor: '#C6C6C6',
@@ -371,10 +393,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     marginBottom: 20,
   },
-  scrollViewContainer:{
-    // marginBottom:20,
-    backgroundColor:'pink'
-  }
+  scrollViewHeightContainer: {
+    height: Dimensions.get('window').height / 1.6,
+  },
 });
 
 export default SearchBar;

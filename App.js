@@ -24,8 +24,8 @@ const App = () => {
         <SearchBar />
       </View>
       
-      <View style={styles.bottomPadding}>
-          <Text>hi</Text>
+      <View>
+          
           </View>
       </SafeAreaView>
     </Fragment>
@@ -88,13 +88,6 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     textAlign: 'right',
   },
-  bottomPadding:{
-    // position:"absolute",
-    height:50,
-    width:Dimensions.get('window').width,
-    // alignSelf: 'stretch',
-    backgroundColor:'red',
-  }
 });
 
 export default App;
