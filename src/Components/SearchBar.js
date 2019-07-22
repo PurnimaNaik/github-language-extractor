@@ -38,54 +38,56 @@ class SearchBar extends React.Component {
   getUserRepos = username => {
     // this.deepLanguageCollection={};
     if (this.state.borderBottomColor != 'red') {
-      deepLanguageCollection={};
+      deepLanguageCollection = {};
       total = null;
-      this.setState({
-        searchedUsername: username.trim(),
-        searchEmpty: true,
-        errorMessage: null,
-        borderBottomColor: 'transparent',
-        deepLanguageCollectionInState: [],
-        languageCollection: [],
-        languageURlCollection: [],
-        totalInState: null,
-      },()=>{
-        try {
-          fetch('https://api.github.com/users/' + username + '/repos', {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          })
-            .then(response => response.json())
-  
-            .then(responseJson => {
-              this.textInput.clear();
-              if (responseJson.length == 0) {
-                this.setState({
-                  errorMessage: 'User has no projects on Github.',
-                });
-              } else if (responseJson.message) {
-                this.setState({
-                  errorMessage: responseJson.message,
-                });
-              } else {
-                this.setState(
-                  {
-                    response: responseJson,
-                  },
-                  () => {
-                    this.getShallowLanguagePool();
-                  }
-                );
-              }
-            });
-        } catch (error) {
-          console.log(error);
+      this.setState(
+        {
+          searchedUsername: username.trim(),
+          searchEmpty: true,
+          errorMessage: null,
+          borderBottomColor: 'transparent',
+          deepLanguageCollectionInState: [],
+          languageCollection: [],
+          languageURlCollection: [],
+          totalInState: null,
+        },
+        () => {
+          try {
+            fetch('https://api.github.com/users/' + username + '/repos', {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+            })
+              .then(response => response.json())
+
+              .then(responseJson => {
+                this.textInput.clear();
+                if (responseJson.length == 0) {
+                  this.setState({
+                    errorMessage: 'User has no projects on Github.',
+                  });
+                } else if (responseJson.message) {
+                  this.setState({
+                    errorMessage: responseJson.message,
+                  });
+                } else {
+                  this.setState(
+                    {
+                      response: responseJson,
+                    },
+                    () => {
+                      this.getShallowLanguagePool();
+                    }
+                  );
+                }
+              });
+          } catch (error) {
+            console.log(error);
+          }
         }
-      });
-      
+      );
     }
   };
 
@@ -177,10 +179,11 @@ class SearchBar extends React.Component {
     // console.log("deepLanguageCollection",this.deepLanguageCollection);
     // console.log("searchedUsername",this.state.searchedUsername);
 
-
     return keys.map((iteratorKey, index) => {
-      console.log((deepLanguageCollection[iteratorKey] / this.state.totalInState) *100)
-      console.log("_______________________________________")
+      console.log(
+        (deepLanguageCollection[iteratorKey] / this.state.totalInState) * 100
+      );
+      console.log('_______________________________________');
       return (
         <ProgressBar
           key={iteratorKey}
@@ -241,7 +244,6 @@ class SearchBar extends React.Component {
   };
 
   render() {
-
     return (
       <View style={styles.container}>
         <View
@@ -304,6 +306,7 @@ class SearchBar extends React.Component {
                 )}
               </ScrollView>
             ) : null}
+             <View style={styles.bottomShadow} />
           </View>
         </View>
       </View>
@@ -395,6 +398,16 @@ const styles = StyleSheet.create({
   },
   scrollViewHeightContainer: {
     height: Dimensions.get('window').height / 1.6,
+  },
+  bottomShadow: {
+    borderBottomColor: '#EEEEEE',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: -5 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    height:0.5,
+    backgroundColor:'white',
   },
 });
 
