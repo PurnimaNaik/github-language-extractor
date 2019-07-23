@@ -10,10 +10,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,Platform
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import ProgressBar from './ProgressBar';
 var deepLanguageCollection = {};
 var total = null;
@@ -34,8 +34,7 @@ class SearchBar extends React.Component {
       invalidUsernameMessage:
         'Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.',
       borderBottomColor: 'transparent',
-      showLoader:false,
-      
+      showLoader: false,
     };
   }
 
@@ -43,68 +42,67 @@ class SearchBar extends React.Component {
     // this.deepLanguageCollection={};
 
     NetInfo.fetch().then(state => {
-
-      if(!state.isConnected){
+      if (!state.isConnected) {
         this.setState({
-          errorMessage: 'No internet connection detected. Please restore connection and try again.',
+          errorMessage:
+            'No internet connection detected. Please restore connection and try again.',
         });
-      }
-      else{
-      if (this.state.borderBottomColor != 'red') {
-      deepLanguageCollection = {};
-      total = null;
-      this.setState(
-        {
-          searchedUsername: username.trim(),
-          searchEmpty: true,
-          errorMessage: null,
-          borderBottomColor: 'transparent',
-          deepLanguageCollectionInState: [],
-          languageCollection: [],
-          languageURlCollection: [],
-          totalInState: null,
-          showLoader:true,
-        },
-        () => {
-          try {
-            fetch('https://api.github.com/users/' + username + '/repos', {
-              method: 'GET',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-            })
-              .then(response => response.json())
+      } else {
+        if (this.state.borderBottomColor != 'red') {
+          deepLanguageCollection = {};
+          total = null;
+          this.setState(
+            {
+              searchedUsername: username.trim(),
+              searchEmpty: true,
+              errorMessage: null,
+              borderBottomColor: 'transparent',
+              deepLanguageCollectionInState: [],
+              languageCollection: [],
+              languageURlCollection: [],
+              totalInState: null,
+              showLoader: true,
+            },
+            () => {
+              try {
+                fetch('https://api.github.com/users/' + username + '/repos', {
+                  method: 'GET',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then(response => response.json())
 
-              .then(responseJson => {
-                this.textInput.clear();
-                if (responseJson.length == 0) {
-                  this.setState({
-                    errorMessage: 'User has no projects on Github.',
-                  });
-                } else if (responseJson.message) {
-                  this.setState({
-                    errorMessage: responseJson.message,
-                  });
-                } else {
-                  this.setState(
-                    {
-                      response: responseJson,
-                    },
-                    () => {
-                      this.getShallowLanguagePool();
+                  .then(responseJson => {
+                    this.textInput.clear();
+                    if (responseJson.length == 0) {
+                      this.setState({
+                        errorMessage: 'User has no projects on Github.',
+                      });
+                    } else if (responseJson.message) {
+                      this.setState({
+                        errorMessage: responseJson.message,
+                      });
+                    } else {
+                      this.setState(
+                        {
+                          response: responseJson,
+                        },
+                        () => {
+                          this.getShallowLanguagePool();
+                        }
+                      );
                     }
-                  );
-                }
-              });
-          } catch (error) {
-            console.log(error);
-          }
+                  });
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          );
         }
-      );
-    }}
-  });
-
+      }
+    });
   };
 
   getShallowLanguagePool = () => {
@@ -183,7 +181,7 @@ class SearchBar extends React.Component {
     this.setState({
       deepLanguageCollectionInState: deepLanguageCollection,
       totalInState: total,
-      showLoader:false,
+      showLoader: false,
     });
     this.renderProgressBars(deepLanguageCollection, total);
   };
@@ -314,12 +312,12 @@ class SearchBar extends React.Component {
         <View style={styles.divider} />
         ) : null} */}
 
-
-{
-  // (!this.state.deepLanguageCollectionInState && !(this.state.response || this.state.errorMessage))?
-  (this.state.showLoader)?
-  <View style={styles.loaderContainer}><ActivityIndicator size="large" color="black"/></View>: null
-}
+        {// (!this.state.deepLanguageCollectionInState && !(this.state.response || this.state.errorMessage))?
+        this.state.showLoader ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="black" />
+          </View>
+        ) : null}
 
         <View style={styles.scrollViewHeightContainer}>
           <View style={styles.scrollViewContainer}>
@@ -330,7 +328,7 @@ class SearchBar extends React.Component {
                 )}
               </ScrollView>
             ) : null}
-             <View style={styles.bottomShadow} />
+            <View style={styles.bottomShadow} />
           </View>
         </View>
       </View>
@@ -351,17 +349,17 @@ data={this.state.deepLanguageCollectionInState}
 }
 const styles = StyleSheet.create({
   container: {
+    
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: Platform.OS === 'android'?20:10,
   },
-  loaderContainer:{
-    position:'absolute',
+  loaderContainer: {
+    position: 'absolute',
   },
   searchBox: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    // justifyContent: 'center',
     alignItems: 'center',
     height: 40,
     width: Dimensions.get('window').width - 30,
@@ -373,10 +371,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 20,
     borderBottomWidth: 1,
+    elevation: 5,
   },
   textBox: {
     width: Dimensions.get('window').width - 100,
     fontSize: 19,
+    marginBottom: Platform.OS === 'android'?-4:0,
+    
   },
   searchIcon: {
     height: 30,
@@ -433,8 +434,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 1,
     shadowRadius: 4,
-    height:0.5,
-    backgroundColor:'white',
+    height: 0.5,
+    backgroundColor: 'white',
+    // elevation: 5,
   },
 });
 

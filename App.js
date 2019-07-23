@@ -7,7 +7,7 @@
  */
 
 import React, { Fragment } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Dimensions, Platform } from 'react-native';
 
 import SearchBar from './src/Components/SearchBar';
 import Colors from './src/Utils/Colors';
@@ -34,6 +34,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop:Platform.OS === 'android'?50:0,
     flex:1,
     backgroundColor:'white',
     alignItems: 'center',
