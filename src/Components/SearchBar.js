@@ -12,6 +12,7 @@ import {
   Alert,
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
+import NetInfo from "@react-native-community/netinfo";
 import ProgressBar from './ProgressBar';
 var deepLanguageCollection = {};
 var total = null;
@@ -32,12 +33,22 @@ class SearchBar extends React.Component {
       invalidUsernameMessage:
         'Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.',
       borderBottomColor: 'transparent',
+      
     };
   }
 
   getUserRepos = username => {
     // this.deepLanguageCollection={};
-    if (this.state.borderBottomColor != 'red') {
+
+    NetInfo.fetch().then(state => {
+
+      if(!state.isConnected){
+        this.setState({
+          errorMessage: 'No internet connection detected. Please restore connection and try again.',
+        });
+      }
+      else{
+      if (this.state.borderBottomColor != 'red') {
       deepLanguageCollection = {};
       total = null;
       this.setState(
@@ -88,7 +99,9 @@ class SearchBar extends React.Component {
           }
         }
       );
-    }
+    }}
+  });
+
   };
 
   getShallowLanguagePool = () => {
