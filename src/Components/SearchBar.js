@@ -63,6 +63,7 @@ class SearchBar extends React.Component {
           languageCollection: [],
           languageURlCollection: [],
           totalInState: null,
+          searchedUsername: null,
         },
         () => {
           try {
@@ -195,10 +196,10 @@ class SearchBar extends React.Component {
     // console.log("searchedUsername",this.state.searchedUsername);
 
     return keys.map((iteratorKey, index) => {
-      console.log(
-        (deepLanguageCollection[iteratorKey] / this.state.totalInState) * 100
-      );
-      console.log('_______________________________________');
+      // console.log(
+      //   (deepLanguageCollection[iteratorKey] / this.state.totalInState) * 100
+      // );
+      // console.log('_______________________________________');
       return (
         <ProgressBar
           key={iteratorKey}
