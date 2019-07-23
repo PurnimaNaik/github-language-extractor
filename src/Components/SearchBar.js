@@ -34,7 +34,7 @@ class SearchBar extends React.Component {
       invalidUsernameMessage:
         'Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.',
       borderBottomColor: 'transparent',
-     
+      showLoader:false,
       
     };
   }
@@ -63,7 +63,7 @@ class SearchBar extends React.Component {
           languageCollection: [],
           languageURlCollection: [],
           totalInState: null,
-          searchedUsername: null,
+          showLoader:true,
         },
         () => {
           try {
@@ -183,6 +183,7 @@ class SearchBar extends React.Component {
     this.setState({
       deepLanguageCollectionInState: deepLanguageCollection,
       totalInState: total,
+      showLoader:false,
     });
     this.renderProgressBars(deepLanguageCollection, total);
   };
@@ -315,7 +316,8 @@ class SearchBar extends React.Component {
 
 
 {
-  (!this.state.deepLanguageCollectionInState && this.state.searchedUsername)?
+  // (!this.state.deepLanguageCollectionInState && !(this.state.response || this.state.errorMessage))?
+  (this.state.showLoader)?
   <View style={styles.loaderContainer}><ActivityIndicator size="large" color="black"/></View>: null
 }
 
