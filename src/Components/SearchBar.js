@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  ActivityIndicator
 } from 'react-native';
 // import ProgressCircleBase from './ProgressCircleBase';searchIcon.png
 import NetInfo from "@react-native-community/netinfo";
@@ -33,6 +34,7 @@ class SearchBar extends React.Component {
       invalidUsernameMessage:
         'Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.',
       borderBottomColor: 'transparent',
+     
       
     };
   }
@@ -310,6 +312,12 @@ class SearchBar extends React.Component {
         <View style={styles.divider} />
         ) : null} */}
 
+
+{
+  (!this.state.deepLanguageCollectionInState && this.state.searchedUsername)?
+  <View style={styles.loaderContainer}><ActivityIndicator size="large" color="black"/></View>: null
+}
+
         <View style={styles.scrollViewHeightContainer}>
           <View style={styles.scrollViewContainer}>
             {this.state.deepLanguageCollectionInState ? (
@@ -343,6 +351,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
+  },
+  loaderContainer:{
+    position:'absolute',
   },
   searchBox: {
     flexDirection: 'row',
