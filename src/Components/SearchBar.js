@@ -232,7 +232,7 @@ class SearchBar extends React.Component {
 
     if (validInput) {
       this.setState({
-        borderBottomColor: 'green',
+        borderBottomColor: '#36c93d',
       });
     } else {
       this.setState({
