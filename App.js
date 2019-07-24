@@ -18,7 +18,7 @@ const App = () => {
       <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
       <View style={styles.titleContainer}>
-      <Text style={styles.title}>Github Language Extractor</Text>
+      <Text style={styles.title}>Git Language Extractor</Text>
       </View>
       
         <SearchBar />
