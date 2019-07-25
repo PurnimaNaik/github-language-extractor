@@ -90,6 +90,7 @@ console.log("borderBottomColor",this.state.borderBottomColor);
                         showLoader: false,
                       });
                     } else {
+                      
                       this.setState(
                         {
                           response: responseJson,
@@ -158,11 +159,12 @@ console.log("borderBottomColor",this.state.borderBottomColor);
         console.log(error);
       }
     }
+   
   };
 
   poolLanguagesFromRepos = () => {
     var key, value, keyString;
-    // console.log('RESPONSE', this.state.repoLanguageResponse);
+    console.log('RESPONSE', this.state.repoLanguageResponse);
     for (i = 0; i < Object.keys(this.state.repoLanguageResponse).length; i++) {
       // console.log("Object.keys(this.state.repoLanguageResponse)[i]",Object.keys(this.state.repoLanguageResponse)[i]);
       key = Object.keys(this.state.repoLanguageResponse)[i];
@@ -348,8 +350,7 @@ console.log("borderBottomColor",this.state.borderBottomColor);
         ) : null} */}
 
         {// (!this.state.deepLanguageCollectionInState && !(this.state.response || this.state.errorMessage))?
-         this.state.deepLanguageCollectionInState==null || this.state.repoParsed==null || Object.keys(this.state.languageURlCollection).length!=this.state.repoParsed? (
-          // this.state.repoParsed ? (
+        this.state.showLoader ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color="black" />
           </View>
