@@ -35,6 +35,7 @@ class SearchBar extends React.Component {
         'Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.',
       borderBottomColor: 'transparent',
       showLoader: false,
+      repoParsed:null,
     };
   }
 
@@ -62,6 +63,7 @@ class SearchBar extends React.Component {
               languageURlCollection: [],
               totalInState: null,
               showLoader: true,
+              repoParsed:null,
             },
             () => {
               try {
@@ -153,6 +155,7 @@ class SearchBar extends React.Component {
         console.log(error);
       }
     }
+   
   };
 
   poolLanguagesFromRepos = () => {
@@ -178,23 +181,27 @@ class SearchBar extends React.Component {
       // console.log("deepLanguageCollection",deepLanguageCollection)
       // console.log("total",total)
     }
+    
     this.setState({
       deepLanguageCollectionInState: deepLanguageCollection,
       totalInState: total,
       showLoader: false,
+      repoParsed:this.state.repoParsed+1,
     });
-    this.renderProgressBars(deepLanguageCollection, total);
+    // this.renderProgressBars(deepLanguageCollection, total);
   };
   // (java/total)*100
 
   renderProgressBars = deepLanguageCollection => {
+    // console.log("-----renderProgressBars-----")
+    // console.log(this.state.totalInState)
     const keys = Object.keys(deepLanguageCollection); // Get all keys from dictionary
     // console.log("deepLanguageCollectionInState",this.state.deepLanguageCollectionInState);
     // console.log("totalInState",this.state.totalInState);
     // console.log("deepLanguageCollection",this.deepLanguageCollection);
     // console.log("searchedUsername",this.state.searchedUsername);
 
-    return keys.map((iteratorKey, index) => {
+  return keys.map((iteratorKey, index) => {
       // console.log(
       //   (deepLanguageCollection[iteratorKey] / this.state.totalInState) * 100
       // );
@@ -223,6 +230,7 @@ class SearchBar extends React.Component {
       deepLanguageCollectionInState: null,
       languageCollection: [],
       languageURlCollection: [],
+      repoParsed:null,
     });
   };
 
@@ -254,11 +262,36 @@ class SearchBar extends React.Component {
         deepLanguageCollectionInState: null,
         languageCollection: [],
         languageURlCollection: [],
+        repoParsed:null,
       });
     }
   };
 
   render() {
+
+   const ProgressBars=()=>{
+    // console.log("-----renderProgressBars-----")
+    // console.log(this.state.totalInState)
+    if(this.state.deepLanguageCollectionInState){
+      const keys = Object.keys(this.state.deepLanguageCollectionInState); // Get all keys from dictionary
+      return keys.map((iteratorKey, index) => {
+          return (
+            <ProgressBar
+              key={iteratorKey}
+              percentage={(
+                (this.state.deepLanguageCollectionInState[iteratorKey] / this.state.totalInState) *
+                100
+              ).toFixed(2)}
+              language={iteratorKey}
+              color="#36c93d"
+            />
+          );
+        });
+    }
+    else return <View></View>
+    //  this.renderProgressBars(this.state.deepLanguageCollectionInState)
+    }
+
     return (
       <View style={styles.container}>
         <View
@@ -321,12 +354,10 @@ class SearchBar extends React.Component {
 
         <View style={styles.scrollViewHeightContainer}>
           <View style={styles.scrollViewContainer}>
-            {this.state.deepLanguageCollectionInState ? (
+            {this.state.deepLanguageCollectionInState!=null && this.state.repoParsed!=null && Object.keys(this.state.languageURlCollection).length===this.state.repoParsed? (
               <ScrollView style={styles.progressBarConatiner}>
-                {this.renderProgressBars(
-                  this.state.deepLanguageCollectionInState
-                )}
-              </ScrollView>
+              <ProgressBars/>
+              </ScrollView> 
             ) : null}
             <View style={styles.bottomShadow} />
           </View>
@@ -451,3 +482,6 @@ const colors = [
   '#ffc0cb',
   '#29b6f6',
 ];
+               {/* <ScrollView style={styles.progressBarConatiner}>*/}
+              //  progressBars
+              {/* </ScrollView> */}
