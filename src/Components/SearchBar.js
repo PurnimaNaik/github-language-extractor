@@ -41,12 +41,13 @@ class SearchBar extends React.Component {
 
   getUserRepos = username => {
     // this.deepLanguageCollection={};
-
+console.log("borderBottomColor",this.state.borderBottomColor);
     NetInfo.fetch().then(state => {
       if (!state.isConnected) {
         this.setState({
           errorMessage:
             'No internet connection detected. Please restore connection and try again.',
+            showLoader: false,
         });
       } else {
         if (this.state.borderBottomColor != 'red') {
@@ -81,10 +82,12 @@ class SearchBar extends React.Component {
                     if (responseJson.length == 0) {
                       this.setState({
                         errorMessage: 'User has no projects on Github.',
+                        showLoader: false,
                       });
                     } else if (responseJson.message) {
                       this.setState({
                         errorMessage: responseJson.message,
+                        showLoader: false,
                       });
                     } else {
                       this.setState(
@@ -155,7 +158,6 @@ class SearchBar extends React.Component {
         console.log(error);
       }
     }
-   
   };
 
   poolLanguagesFromRepos = () => {
@@ -346,7 +348,8 @@ class SearchBar extends React.Component {
         ) : null} */}
 
         {// (!this.state.deepLanguageCollectionInState && !(this.state.response || this.state.errorMessage))?
-        this.state.showLoader ? (
+         this.state.deepLanguageCollectionInState==null || this.state.repoParsed==null || Object.keys(this.state.languageURlCollection).length!=this.state.repoParsed? (
+          // this.state.repoParsed ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color="black" />
           </View>
