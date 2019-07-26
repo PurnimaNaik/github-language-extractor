@@ -112,6 +112,7 @@ console.log("borderBottomColor",this.state.borderBottomColor);
   };
 
   getShallowLanguagePool = () => {
+    
     var langauageArray = [];
     var languageURLArray = [];
     for (i = 0; i < this.state.response.length; i++) {
@@ -348,9 +349,9 @@ console.log("borderBottomColor",this.state.borderBottomColor);
         {/* {this.state.deepLanguageCollectionInState ? (
         <View style={styles.divider} />
         ) : null} */}
-
+{/* this.state.showLoader && */}
         {// (!this.state.deepLanguageCollectionInState && !(this.state.response || this.state.errorMessage))?
-        this.state.showLoader ? (
+         (this.state.deepLanguageCollectionInState!=null && this.state.repoParsed!=null && Object.keys(this.state.languageURlCollection).length!=this.state.repoParsed)? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color="black" />
           </View>
