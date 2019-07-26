@@ -257,6 +257,7 @@ console.log("borderBottomColor",this.state.borderBottomColor);
       this.setState({
         searchEmpty: false,
         deepLanguageCollectionInState: null,
+        errorMessage: null,
       });
     } else {
       // this.deepLanguageCollection={};
@@ -317,6 +318,7 @@ console.log("borderBottomColor",this.state.borderBottomColor);
               this.textInput = input;
             }}
             onChange={event => this.validateInput(event.nativeEvent.text)}
+            
           />
 
           {this.state.searchEmpty ? null : (
