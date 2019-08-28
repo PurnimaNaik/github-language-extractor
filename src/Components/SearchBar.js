@@ -391,6 +391,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: Platform.OS === 'android'?20:10,
+   
   },
   loaderContainer: {
     position: 'absolute',
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   scrollViewHeightContainer: {
-    height: Dimensions.get('window').height / 1.6,
+    height: Platform.OS === 'android'?Dimensions.get('window').height / 1.9:Dimensions.get('window').height / 1.6 ,
   },
   bottomShadow: {
     borderBottomColor: '#EEEEEE',

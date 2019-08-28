@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     flex:1,
     backgroundColor:'white',
     alignItems: 'center',
+
   },
   titleContainer:{
     width:Dimensions.get('window').width,

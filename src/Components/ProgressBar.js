@@ -66,7 +66,8 @@ class ProgressBar extends React.Component {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width - 50,
-    // backgroundColor: 'transparent',
+    
+    // backgroundColor: 'pink',
     //   alignItems: 'center',
     backgroundColor: '#EBEBEB',
     marginBottom: 25,
